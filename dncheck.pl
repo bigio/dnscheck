@@ -9,13 +9,14 @@ use warnings;
 use Net::DNS;
 
 my $domain = shift;
-my $res;
+my $resolver = shift;
+my $auth_res;
+my $pub_res;
 
 if ( not defined $domain ) {
- die "usage: dnscheck domain\n";
+ die "usage: dnscheck domain [resolver]\n";
 }
 
-$res = Net::DNS::Resolver->new;
 
 # Resolve an host, returns an arrays of corresponding ip
 sub resolve_host() {
@@ -23,7 +24,7 @@ sub resolve_host() {
  my @result;
  my $rr;
  my $count = 0;
- my $query = $res->search($host);
+ my $query = $pub_res->search($host);
 
  if ($query) {
   foreach my $rr ($query->answer) {
@@ -32,7 +33,7 @@ sub resolve_host() {
    $count++;
   }
  } else {
-  warn "query failed: ", $res->errorstring, "\n";
+  warn "query failed: ", $pub_res->errorstring, "\n";
  }
  return @result;
 }
@@ -45,7 +46,7 @@ sub find_ns() {
  my $rr;
  my $count = 0;
 
- my $query = $res->query($domain, "NS");
+ my $query = $auth_res->query($domain, "NS");
 
  if ($query) {
   foreach $rr (grep { $_->type eq 'NS' } $query->answer) {
@@ -57,12 +58,25 @@ sub find_ns() {
    $count++;
   }
  } else {
-  warn "query failed: ", $res->errorstring, "\n";
+  warn "query failed: ", $auth_res->errorstring, "\n";
  }
  return @result;
 }
 
 # Main function
+
+# Use a different resolver for authoritative queries if specified
+if ( defined $resolver ) {
+ $auth_res = Net::DNS::Resolver->new(
+	nameservers => [ $resolver ],
+	recurse => 0,
+ );
+} else {
+ $auth_res = Net::DNS::Resolver->new;
+}
+
+# Use the standard resolver for not authorative queries
+$pub_res = Net::DNS::Resolver->new;
 
 # Find ns and print them with their ip
 my @ns = &find_ns($domain);
