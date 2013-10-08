@@ -9,7 +9,13 @@ use warnings;
 use Net::DNS;
 
 my $domain = shift;
-my $res   = Net::DNS::Resolver->new;
+my $res;
+
+if ( not defined $domain ) {
+ die "usage: dnscheck domain\n";
+}
+
+$res = Net::DNS::Resolver->new;
 
 # Resolve an host, returns an arrays of corresponding ip
 sub resolve_host() {
