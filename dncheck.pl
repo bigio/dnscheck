@@ -1,5 +1,8 @@
 #!/usr/bin/perl 
 
+# Giovanni Bechis, 2013-10-08
+# dns configuration check
+
 use strict;
 use warnings;
 
@@ -8,6 +11,7 @@ use Net::DNS;
 my $domain = shift;
 my $res   = Net::DNS::Resolver->new;
 
+# Resolve an host, returns an arrays of corresponding ip
 sub resolve_host() {
  my $host = shift;
  my @result;
@@ -27,6 +31,7 @@ sub resolve_host() {
  return @result;
 }
 
+# Find authoritative name servers
 sub find_ns() {
  my $domain = shift;
  my @result;
@@ -51,6 +56,9 @@ sub find_ns() {
  return @result;
 }
 
+# Main function
+
+# Find ns and print them with their ip
 my @ns = &find_ns($domain);
 for my $i ( 0 .. @ns ) {
  if ( defined $ns[$i] ) {
