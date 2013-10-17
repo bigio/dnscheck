@@ -42,3 +42,6 @@ for my $i ( 0 .. @ns ) {
   print " )\n";
  }
 }
+if(&dnscheck::dns::check_cname($domain, $auth_res) ) {
+  print "Error: record for domain $domain is a CNAME record\n";
+}

@@ -30,6 +30,24 @@ sub resolve_host() {
  return @result;
 }
 
+# Check if an host resolves as a CNAME
+sub check_cname() {
+ my $host = shift;
+ my $auth_res = shift;
+ my $rr;
+ my $query = $auth_res->search($host);
+
+ if ($query) {
+  foreach my $rr ($query->answer) {
+   next unless $rr->type eq "CNAME";
+   return 1;
+  }
+ } else {
+  warn "query failed: ", $auth_res->errorstring, "\n";
+ }
+ return 0;
+}
+
 # Find authoritative name servers
 sub find_ns() {
  my $domain = shift;
