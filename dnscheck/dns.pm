@@ -75,4 +75,21 @@ sub find_ns() {
  return @result;
 }
 
+# Find soa record
+sub find_soa() {
+ my $domain = shift;
+ my $auth_res = shift;
+ my $rr;
+
+ my $query = $auth_res->query($domain, "SOA");
+
+ if ($query) {
+  return ($query->answer)[0]->string;
+ } else {
+  warn "query failed: ", $auth_res->errorstring, "\n";
+  return -1;
+ }
+
+}
+
 1;
