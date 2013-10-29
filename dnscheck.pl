@@ -7,11 +7,13 @@ use strict;
 use warnings;
 
 use dnscheck::dns;
+use dnscheck::parse;
 
 my $domain = shift;
 my $resolver = shift;
 my $auth_res;
 my $pub_res;
+my %soa_info;
 
 if ( not defined $domain ) {
  die "usage: dnscheck domain [resolver]\n";
@@ -44,4 +46,8 @@ for my $i ( 0 .. @ns ) {
 }
 if(&dnscheck::dns::check_cname($domain, $auth_res) ) {
   print "Error: record for domain $domain is a CNAME record\n";
+}
+%soa_info = &dnscheck::parse::parse_soa(&dnscheck::dns::find_soa($domain, $auth_res));
+if ( ( $soa_info{NS} =~ /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/ ) ) {
+  print "Error: nameserver in soa record should not be an ip address\n";
 }
