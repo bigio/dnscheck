@@ -6,6 +6,9 @@
 use strict;
 use warnings;
 
+use Net::DNS;
+use Net::IP;
+
 use dnscheck::dns;
 use dnscheck::parse;
 
@@ -50,6 +53,6 @@ if(&dnscheck::dns::check_cname($domain, $auth_res) ) {
 %soa_info = &dnscheck::parse::parse_soa(&dnscheck::dns::find_soa($domain, $auth_res));
 if ( not defined $soa_info{NS} ) {
   print "Error: soa query has failed\n";
-} elsif ( ( $soa_info{NS} =~ /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/ ) ) {
+} elsif ( ( Net::IP::ip_is_ipv4($soa_info{NS}) ) ) {
   print "Error: nameserver in soa record should not be an ip address\n";
 }
