@@ -48,6 +48,8 @@ if(&dnscheck::dns::check_cname($domain, $auth_res) ) {
   print "Error: record for domain $domain is a CNAME record\n";
 }
 %soa_info = &dnscheck::parse::parse_soa(&dnscheck::dns::find_soa($domain, $auth_res));
-if ( ( $soa_info{NS} =~ /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/ ) ) {
+if ( not defined $soa_info{NS} ) {
+  print "Error: soa query has failed\n";
+} elsif ( ( $soa_info{NS} =~ /(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})/ ) ) {
   print "Error: nameserver in soa record should not be an ip address\n";
 }
