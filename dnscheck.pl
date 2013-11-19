@@ -53,12 +53,33 @@ for my $i ( 0 .. @ns ) {
  }
 }
 print "\n";
+
+# Tests on dns records
 print "record for domain should not be a CNAME...\t";
 if(&dnscheck::dns::check_cname($domain, $auth_res) ) {
   print "KO\n";
 } else {
   print "OK\n";
 }
+
+print "NS record should not be a CNAME...\t\t";
+my $ns_cname_check = 0;
+for my $i ( 0 .. @ns ) {
+ if ( defined $ns[$i] ) {
+  if(&dnscheck::dns::check_cname($ns[$i]{'NS'}, $auth_res) ) {
+    $ns_cname_check = 1;
+  } else {
+    $ns_cname_check = 0;
+  }
+ }
+}
+if( $ns_cname_check ) {
+  print "KO\n";
+} else {
+  print "OK\n";
+}
+
+# tests on soa record
 %soa_info = &dnscheck::parse::parse_soa(&dnscheck::dns::find_soa($domain, $auth_res));
 print "soa record checks...\t\t\t\t";
 if ( not defined $soa_info{NS} ) {
