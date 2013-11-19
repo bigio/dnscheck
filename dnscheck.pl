@@ -6,6 +6,9 @@
 use strict;
 use warnings;
 
+use FindBin;
+use lib ("$FindBin::Bin");
+
 use Net::DNS;
 use Net::IP;
 
