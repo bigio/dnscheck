@@ -75,6 +75,28 @@ sub find_ns() {
  return @result;
 }
 
+# Find mail exchange servers
+sub find_mx() {
+ my $domain = shift;
+ my $auth_res = shift;
+ my $pub_res = shift;
+ my $rr;
+ my @mx;
+ my @result;
+ my $count = 0;
+
+ @mx = mx($auth_res, $domain);
+ if ( @mx ) {
+    foreach $rr ( @mx ) {
+       $result[$count]{'MX'} = $rr->exchange;
+       $count++;	
+     }
+ } else {
+    warn "Can't find MX records for $domain: ", $auth_res->errorstring, "\n";
+ }
+ return @result;
+}
+
 # Find soa record
 sub find_soa() {
  my $domain = shift;

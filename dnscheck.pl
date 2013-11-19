@@ -62,7 +62,7 @@ if(&dnscheck::dns::check_cname($domain, $auth_res) ) {
   print "OK\n";
 }
 
-print "NS record should not be a CNAME...\t\t";
+print "NS records should not be a CNAME...\t\t";
 my $ns_cname_check = 0;
 for my $i ( 0 .. @ns ) {
  if ( defined $ns[$i] ) {
@@ -74,6 +74,24 @@ for my $i ( 0 .. @ns ) {
  }
 }
 if( $ns_cname_check ) {
+  print "KO\n";
+} else {
+  print "OK\n";
+}
+
+print "MX records should not be a CNAME...\t\t";
+my @mx = &dnscheck::dns::find_mx($domain, $auth_res, $pub_res);
+my $mx_cname_check = 0;
+for my $i ( 0 .. @ns ) {
+ if ( defined $mx[$i] ) {
+  if(&dnscheck::dns::check_cname($mx[$i]{'MX'}, $auth_res) ) {
+    $mx_cname_check = 1;
+  } else {
+    $mx_cname_check = 0;
+  }
+ }
+}
+if( $mx_cname_check ) {
   print "KO\n";
 } else {
   print "OK\n";
