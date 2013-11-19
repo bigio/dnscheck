@@ -24,7 +24,7 @@ my $pub_res;
 my %soa_info;
 
 if ( not defined $domain ) {
-	die "usage: dnscheck domain [resolver]\n";
+	die "usage: dnscheck domain [authoritative domain server]\n";
 }
 
 # Main function
