@@ -6,6 +6,7 @@
 
 use strict;
 use warnings;
+use Getopt::Std;
 
 use FindBin;
 use lib ("$FindBin::Bin");
@@ -16,12 +17,20 @@ use Net::IP;
 use dnscheck::dns;
 use dnscheck::parse;
 
-my $domain = shift;
-my $resolver = shift;
+my $domain;
+my $resolver;
 my $verbose = 0;
 my $auth_res;
 my $pub_res;
 my %soa_info;
+my %opts = ();
+
+getopts('v', \%opts);
+if ( defined $opts{v} ) {
+	$verbose = 1;
+}
+$domain = shift;
+$resolver = shift;
 
 if ( not defined $domain ) {
 	die "usage: dnscheck domain [authoritative domain server]\n";
