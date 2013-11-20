@@ -33,7 +33,7 @@ $domain = shift;
 $resolver = shift;
 
 if ( not defined $domain ) {
-	die "usage: dnscheck domain [authoritative domain server]\n";
+	die "usage: dnscheck [-v] domain [authoritative domain server]\n";
 }
 
 # Main function
