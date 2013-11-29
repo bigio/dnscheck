@@ -62,6 +62,9 @@ for my $i ( 0 .. @ns ) {
 		print " )\n";
 	}
 }
+if ( not defined $ns[0] ) {
+	die "No nameservers available for domain $domain\n";
+}
 print "\n";
 
 # Tests on dns records
