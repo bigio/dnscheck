@@ -69,7 +69,7 @@ print "\n";
 
 # Tests on dns records
 print "record for domain should not be a CNAME...\t";
-if( &dnscheck::dns::check_cname( $domain, $auth_res ) ) {
+if( &dnscheck::dns::check_cname( $domain, $auth_res, $verbose ) ) {
 	print "KO\n";
 } else {
 	print "OK\n";
@@ -79,7 +79,7 @@ print "NS records should not be a CNAME...\t\t";
 my $ns_cname_check = 0;
 for my $i ( 0 .. @ns ) {
 	if ( defined $ns[$i] ) {
-		if( &dnscheck::dns::check_cname( $ns[$i]{'NS'}, $auth_res ) ) {
+		if( &dnscheck::dns::check_cname( $ns[$i]{'NS'}, $auth_res, $verbose ) ) {
 			$ns_cname_check = 1;
 		} else {
 			$ns_cname_check = 0;
@@ -93,11 +93,11 @@ if( $ns_cname_check ) {
 }
 
 print "MX records should not be a CNAME...\t\t";
-my @mx = &dnscheck::dns::find_mx( $domain, $auth_res, $pub_res );
+my @mx = &dnscheck::dns::find_mx( $domain, $auth_res, $pub_res, $verbose );
 my $mx_cname_check = 0;
 for my $i ( 0 .. @ns ) {
 	if ( defined $mx[$i] ) {
-		if( &dnscheck::dns::check_cname( $mx[$i]{'MX'}, $auth_res ) ) {
+		if( &dnscheck::dns::check_cname( $mx[$i]{'MX'}, $auth_res, $verbose ) ) {
 			$mx_cname_check = 1;
 		} else {
 			$mx_cname_check = 0;
@@ -111,7 +111,7 @@ if( $mx_cname_check ) {
 }
 
 # tests on soa record
-%soa_info = &dnscheck::parse::parse_soa(&dnscheck::dns::find_soa($domain, $auth_res));
+%soa_info = &dnscheck::parse::parse_soa(&dnscheck::dns::find_soa( $domain, $auth_res, $verbose ));
 print "soa record checks...\t\t\t\t";
 if ( not defined $soa_info{NS} ) {
 	print "KO";

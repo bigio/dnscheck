@@ -71,7 +71,7 @@ sub find_ns() {
 	if ($query) {
 		foreach $rr (grep { $_->type eq 'NS' } $query->answer) {
 			$result[$count]{'NS'} = $rr->nsdname;
-			@resolved = &resolve_host($rr->nsdname, $pub_res);
+			@resolved = &resolve_host( $rr->nsdname, $pub_res, $verbose );
 			for my $i ( 0 .. (@resolved - 1) ) {
 				$result[$count]{'NS_RESOLVED'} = $resolved[$i];
 			}
