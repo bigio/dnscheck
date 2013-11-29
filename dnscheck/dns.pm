@@ -14,6 +14,7 @@ use Net::DNS;
 sub resolve_host() {
 	my $host = shift;
 	my $pub_res = shift;
+	my $verbose = shift;
 	my @result;
 	my $rr;
 	my $count = 0;
@@ -26,7 +27,9 @@ sub resolve_host() {
    			$count++;
   		}
 	} else {
-		warn "query failed: ", $pub_res->errorstring, "\n";
+		if ( $verbose ) {
+			warn "query failed: ", $pub_res->errorstring, "\n";
+		}
 	}
 	return @result;
 }
@@ -35,6 +38,7 @@ sub resolve_host() {
 sub check_cname() {
 	my $host = shift;
 	my $auth_res = shift;
+	my $verbose = shift;
 	my $rr;
 	my $query = $auth_res->search($host);
 
@@ -44,7 +48,9 @@ sub check_cname() {
 			return 1;
   		}
 	} else {
-		warn "query failed: ", $auth_res->errorstring, "\n";
+		if ( $verbose ) {
+			warn "query failed: ", $auth_res->errorstring, "\n";
+		}
 	}
 	return 0;
 }
@@ -54,6 +60,7 @@ sub find_ns() {
 	my $domain = shift;
 	my $auth_res = shift;
 	my $pub_res = shift;
+	my $verbose = shift;
 	my @result;
 	my @resolved;
 	my $rr;
@@ -71,7 +78,9 @@ sub find_ns() {
 			$count++;
 		}
 	} else {
-		warn "query failed: ", $auth_res->errorstring, "\n";
+		if ( $verbose ) {
+			warn "query failed: ", $auth_res->errorstring, "\n";
+		}
 	}
 	return @result;
 }
@@ -81,6 +90,7 @@ sub find_mx() {
 	my $domain = shift;
 	my $auth_res = shift;
 	my $pub_res = shift;
+	my $verbose = shift;
 	my $rr;
 	my @mx;
 	my @result;
@@ -93,7 +103,9 @@ sub find_mx() {
 			$count++;	
 		}
 	} else {
-		warn "Can't find MX records for $domain: ", $auth_res->errorstring, "\n";
+		if ( $verbose ) {
+			warn "Can't find MX records for $domain: ", $auth_res->errorstring, "\n";
+		}
 	}
 	return @result;
 }
@@ -102,6 +114,7 @@ sub find_mx() {
 sub find_soa() {
 	my $domain = shift;
 	my $auth_res = shift;
+	my $verbose = shift;
 	my $rr;
 
 	my $query = $auth_res->query($domain, "SOA");
@@ -109,7 +122,9 @@ sub find_soa() {
 	if ($query) {
 		return ($query->answer)[0]->string;
 	} else {
-		warn "query failed: ", $auth_res->errorstring, "\n";
+		if ( $verbose ) {
+			warn "query failed: ", $auth_res->errorstring, "\n";
+		}
 		return -1;
 	}
 }

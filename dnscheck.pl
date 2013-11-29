@@ -52,7 +52,7 @@ if ( defined $resolver ) {
 $pub_res = Net::DNS::Resolver->new;
 
 # Find ns and print them with their ip
-my @ns = &dnscheck::dns::find_ns($domain, $auth_res, $pub_res);
+my @ns = &dnscheck::dns::find_ns($domain, $auth_res, $pub_res, $verbose);
 print "NS records for domain " . $domain . "\n";
 for my $i ( 0 .. @ns ) {
 	if ( defined $ns[$i] ) {
