@@ -51,6 +51,11 @@ if ( defined $resolver ) {
 # Use the standard resolver for not authorative queries
 $pub_res = Net::DNS::Resolver->new;
 
+my @ip = &dnscheck::dns::resolve_host($resolver, $pub_res, $verbose);
+if ( not defined $ip[0] ) {
+	print "could not resolve dns server\n";
+}
+
 # Find ns and print them with their ip
 my @ns = &dnscheck::dns::find_ns($domain, $auth_res, $pub_res, $verbose);
 print "NS records for domain " . $domain . "\n";
