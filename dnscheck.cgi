@@ -18,22 +18,22 @@ my $auth_res;
 my $pub_res;
 my $resolver;
 my $verbose = 0;
-my $query = new CGI;
+my $cg = new CGI;
 
 # Print correct headers
-print $query->header("text/html");
-print $query->start_html("DNS configuration check");
-print $query->start_form(-method=>"POST",
+print $cg->header("text/html");
+print $cg->start_html("DNS configuration check");
+print $cg->start_form(-method=>"POST",
 			-action=>"dnscheck.cgi");
-print "Dominio: ". $query->textfield(-name=>"dom");
-print "Server dns: " . $query->textfield(-name=>"resolver");
-print $query->submit(-name=>"dnscheck",
+print "Dominio: ". $cg->textfield(-name=>"dom");
+print "Server dns: " . $cg->textfield(-name=>"resolver");
+print $cg->submit(-name=>"dnscheck",
 		    -value=>"check dns configuration");
-print $query->end_form;
+print $cg->end_form;
 
 # Read POST parameters
-$domain = $query->param('dom');
-$resolver = $query->param('resolver');
+$domain = $cg->param('dom');
+$resolver = $cg->param('resolver');
 
 if ( defined $domain ) {
 	# Use a different resolver for authoritative queries if specified
@@ -68,4 +68,4 @@ if ( defined $domain ) {
 	print "Please specify a domain name<br>\n";
 }
 
-print $query->end_html;
+print $cg->end_html;
