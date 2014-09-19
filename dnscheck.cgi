@@ -25,8 +25,8 @@ print $cg->header("text/html");
 print $cg->start_html("DNS configuration check");
 print $cg->start_form(-method=>"POST",
 			-action=>"dnscheck.cgi");
-print "Dominio: ". $cg->textfield(-name=>"dom");
-print "Server dns: " . $cg->textfield(-name=>"resolver");
+print "Domain: ". $cg->textfield(-name=>"dom");
+print "Dns server: " . $cg->textfield(-name=>"resolver");
 print $cg->submit(-name=>"dnscheck",
 		    -value=>"check dns configuration");
 print $cg->end_form;
