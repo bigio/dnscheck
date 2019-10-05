@@ -63,13 +63,12 @@ sub find_ns() {
 	my $verbose = shift;
 	my @result;
 	my @resolved;
-	my $rr;
 	my $count = 0;
 
 	my $query = $auth_res->query($domain, "NS");
 
 	if ($query) {
-		foreach $rr (grep { $_->type eq 'NS' } $query->answer) {
+		foreach my $rr (grep { $_->type eq 'NS' } $query->answer) {
 			$result[$count]{'NS'} = $rr->nsdname;
 			@resolved = &resolve_host( $rr->nsdname, $pub_res, $verbose );
 			for my $i ( 0 .. (@resolved - 1) ) {
@@ -91,16 +90,15 @@ sub find_mx() {
 	my $auth_res = shift;
 	my $pub_res = shift;
 	my $verbose = shift;
-	my $rr;
 	my @mx;
 	my @result;
 	my $count = 0;
 
 	@mx = mx($auth_res, $domain);
 	if ( @mx ) {
-		foreach $rr ( @mx ) {
+		foreach my $rr ( @mx ) {
 			$result[$count]{'MX'} = $rr->exchange;
-			$count++;	
+			$count++;
 		}
 	} else {
 		if ( $verbose ) {
